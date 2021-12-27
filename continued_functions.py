@@ -1,163 +1,191 @@
-
-###################################
-
 import numpy as np
 import cmath as cm
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
+import os
 
-###################################
+color_codes = {1: 'red', 2: 'yellow', 3: 'blue', 4: 'green', 5: 'magenta', 6: 'crimson', 7: 'violet', 8: 'gold',
+               9: 'palegreen', 10: 'orange', 11: 'skyblue', 12: 'purple', 13: 'aqua', 14: 'pink', 15: 'lime',
+               16: 'mistyrose', 0: 'white'}
 
-color_codes = {1:'red',2:'yellow',3:'blue',4:'green',5:'magenta',6:'crimson',7:'violet',8:'gold',9:'palegreen',10:'orange'
-               ,11:'skyblue',12:'purple',13:'aqua',14:'pink',15:'lime',16:'mistyrose',0:'black'}
+patches = {1: mpatches.Patch(color=color_codes[1], label='1 lp'),
+           2: mpatches.Patch(color=color_codes[2], label='2 lp'),
+           3: mpatches.Patch(color=color_codes[3], label='3 lp'),
+           4: mpatches.Patch(color=color_codes[4], label='4 lp'),
+           5: mpatches.Patch(color=color_codes[5], label='5 lp'),
+           6: mpatches.Patch(color=color_codes[6], label='6 lp'),
+           7: mpatches.Patch(color=color_codes[7], label='7 lp'),
+           8: mpatches.Patch(color=color_codes[8], label='8 lp'),
+           9: mpatches.Patch(color=color_codes[9], label='9 lp'),
+           10: mpatches.Patch(color=color_codes[10], label='10 lp'),
+           11: mpatches.Patch(color=color_codes[11], label='11 lp'),
+           12: mpatches.Patch(color=color_codes[12], label='12 lp'),
+           13: mpatches.Patch(color=color_codes[13], label='13 lp'),
+           14: mpatches.Patch(color=color_codes[14], label='14 lp'),
+           15: mpatches.Patch(color=color_codes[15], label='15 lp'),
+           16: mpatches.Patch(color=color_codes[16], label='16 lp'),
+           0: mpatches.Patch(color=color_codes[0], label='undef')}
 
-red = mpatches.Patch(color='red',label='1 lp')
-yellow = mpatches.Patch(color='yellow',label='2 lp')
-blue = mpatches.Patch(color='blue',label='3 lp')
-green = mpatches.Patch(color='green',label='4 lp')
-magenta = mpatches.Patch(color='magenta',label='5 lp')
-black = mpatches.Patch(color='black',label='undef')
 
-###################################
-
-def f(z,n):
+def continued_function(z, n, function):
     """
     Return a sequence of n iterations of a continued function for a value z
     """
+    if function == 'exp':
+        def f(x):
+            return cm.exp(x*z)
+    elif function == 'log':
+        def f(x):
+            return cm.log(x*z)
+    elif function == 'sqrt':
+        def f(x):
+            return cm.sqrt(x*z)
+    elif function == 'cube_root':
+        def f(x):
+            return (x*z)**(1.0/3.0)
+    elif function == 'sine':
+        def f(x):
+            return cm.sin(x*z)
+    elif function == 'cosine':
+        def f(x):
+            return cm.cos(x*z)
+    elif function == 'tan':
+        def f(x):
+            return cm.tan(x*z)
+    elif function == 'arcsine':
+        def f(x):
+            return cm.asin(pade[k]*z)
+    elif function == 'arccosine':
+        def f(x):
+            return cm.acos(pade[k]*z)
+    elif function == 'arctan':
+        def f(x):
+            return cm.atan(pade[k]*z)
+    elif function == 'sineh':
+        def f(x):
+            return cm.sinh(x*z)
+    elif function == 'cosineh':
+        def f(x):
+            return cm.cosh(x*z)
+    elif function == 'tanh':
+        def f(x):
+            return cm.tanh(x*z)
+    elif function == 'arcsineh':
+        def f(x):
+            return cm.asinh(x*z)
+    elif function == 'arccosineh':
+        def f(x):
+            return cm.acosh(x*z)
+    elif function == 'arctanh':
+        def f(x):
+            return cm.atanh(x*z)
+    elif function == 'exp_sin':
+        def f(x):
+            return cm.exp(cm.sin(x*z))
+    elif function == 'sin_exp':
+        def f(x):
+            return cm.sin(cm.exp(x*z))
+    elif function == 'log_sin':
+        def f(x):
+            return cm.log(cm.sin(x*z))
+    elif function == 'sin_log':
+        def f(x):
+            return cm.sin(cm.log(x*z))
+    elif function == 'cos_sin':
+        def f(x):
+            return cm.cos(cm.sin(x*z))
+    elif function == 'fraction_1':
+        def f(x):
+            return 1/(1+x*z)
+    elif function == 'fraction_2':
+        def f(x):
+            return z/(1+x*z)
+    else:
+        raise ValueError("Incorrect function: {}". format(function))
     pade = [1]
     try:
         for k in range(n):
-            
-            # Functions
-            z_next = cm.exp(pade[k]*z) # exp
-            #z_next = cm.log(pade[k]*z) # log
-            #z_next = cm.sqrt(pade[k]*z) # sqrt
-            #z_next = (pade[k]*z)**(1/3.0) # cube root
-            #z_next = z/(1+pade[k]*z) # Control form of this
-            #z_next = 1/(1+pade[k]*z) # Control form of this
-
-            # Trigonometric
-            #z_next = cm.sin(pade[k]*z) #sine
-            #z_next = cm.cos(pade[k]*z) # cosine
-            #z_next = cm.tan(pade[k]*z) # tan
-            #z_next = cm.asin(pade[k]*z) # arcsine
-            #z_next = cm.acos(pade[k]*z) # arccosine
-            #z_next = cm.atan(pade[k]*z) # arctan
-
-            # Hyperbolics
-            #z_next = cm.sinh(pade[k]*z) #sine 
-            #z_next = cm.cosh(pade[k]*z) # cosine
-            #z_next = cm.tanh(pade[k]*z) # tan
-            #z_next = cm.asinh(pade[k]*z) # arcsine SAME AS ARCSIN
-            #z_next = cm.acosh(pade[k]*z) # arccosine
-            #z_next = cm.atanh(pade[k]*z) # arctan            
-
-            #Composite
-            #z_next = cm.exp(cm.sin(pade[k]*z))
-            #z_next = cm.sin(cm.exp(pade[k]*z))
-            #z_next = cm.log(cm.sin(pade[k]*z))
-            #z_next = cm.sin(cm.log(pade[k]*z))
-            #z_next = cm.cos(cm.sin(pade[k]*z))
-            
+            z_next = f(pade[k])
             pade.append(z_next)
         return pade
-    except (OverflowError,ValueError):
+    except (OverflowError, ValueError):
         return [0]
 
-def test(pade):
+
+def test_limit_points(sequence, max_number_of_lp):
     """
     Return the number (color coded) of limit points in a sequence.
     Points within a distance epsilon are indistinguishable.
     """
+    if len(sequence) == 1:
+        return 0  # undefined
     epsilon = 1e-10
     try:
-        if len(pade) == 1:
-            return 'black' #undefined
-        if abs(pade[-1]-pade[-2])<epsilon:
-            return 'red' #1 limit point
-        elif abs(pade[-1]-pade[-3])<epsilon:
-            return 'yellow' #2 limit points
-        elif abs(pade[-1]-pade[-4])<epsilon:
-            return 'blue' #3 limit points
-        elif abs(pade[-1]-pade[-5])<epsilon:
-            return 'green' #4 limit points
-        elif abs(pade[-1]-pade[-6])<epsilon:
-            return 'magenta' #5 limit points
+        for i in range(2, max_number_of_lp+2):
+            if abs(sequence[-1]-sequence[-i]) < epsilon:
+                return i-1
+        return 0  # undefined
+    except (OverflowError, ValueError):
+        return 0  # undefined
 
-        #elif abs(pade[n]-pade[n-6])<epsilon:
-        #    return 'crimson' #6
-        #elif abs(pade[n]-pade[n-7])<epsilon:
-        #    return 'violet' #7
-        #elif abs(pade[n]-pade[n-8])<epsilon:
-        #    return 'gold' #8
-        #elif abs(pade[n]-pade[n-9])<epsilon:
-        #    return 'palegreen' #9
-        #elif abs(pade[n]-pade[n-10])<epsilon:
-        #    return 'orange' #10
-        #elif abs(pade[n]-pade[n-11])<epsilon:
-        #    return 'skyblue' #11
-        #elif abs(pade[n]-pade[n-12])<epsilon:
-        #    return 'purple' #12
-        #elif abs(pade[n]-pade[n-13])<epsilon:
-        #    return 'aqua' #13
-        #elif abs(pade[n]-pade[n-14])<epsilon:
-        #    return 'pink' #14
-        #elif abs(pade[n]-pade[n-15])<epsilon:
-        #    return 'lime' #15
-        #elif abs(pade[n]-pade[n-16])<epsilon:
-        #    return 'mistyrose' #16
 
-        else:
-            return 'black' #undefined
-    except (OverflowError,ValueError):
-        return 'black' #undefined
-
-def scatter(list_lp,no_of_lp):
+def scatter(function, list_lp, max_number_of_lp, a_re, b_re, a_im, b_im, legend):
     """
     Generate a scatter plot for each number of limit points (each color code).
     """
-    x = []
-    y = []
-    assert isinstance(no_of_lp,int),'number of limit points must be an integer number'
-    Color = color_codes[no_of_lp] #Use predefined dictionary with color codes
-    for k in range(len(list_lp)):
-        if list_lp[k][2] == Color:
-            x.append(list_lp[k][0])
-            y.append(list_lp[k][1])
-    fig = plt.figure(1)
-    ax = fig.add_subplot(111,axisbg='black')
-    return ax.scatter(x,y,s=10,color=Color,marker='.',lw=0,alpha=1)
+    fig = plt.figure(figsize=(16, 16), dpi=2000)
+    ax = fig.add_subplot(111, facecolor=color_codes[0])
 
-###################################
+    for lp in range(1, max_number_of_lp+1):
+        x = []
+        y = []
+        color = color_codes[lp]  # Use predefined dictionary with color codes
+        for k in range(len(list_lp)):
+            if list_lp[k][2] == lp:
+                x.append(list_lp[k][0])
+                y.append(list_lp[k][1])
+        ax.scatter(x, y, s=2, color=color, marker=',', lw=0, alpha=1)
+        ax.set_aspect('equal', 'box')
+    plt.xlim(a_re, b_re)
+    plt.ylim(a_im, b_im)
+    plt.xlabel('Re')
+    plt.ylabel('Im')
+    if legend:
+        list_of_handles = [patches[i] for i in range(max_number_of_lp+1)]
+        plt.legend(bbox_to_anchor=(1.0, 1.0), handles=list_of_handles)
+    fig.tight_layout()
+    if not os.path.exists('output'):
+        os.makedirs('output')
+    plt.savefig("output/{}_{}_lp.png".format(function, max_number_of_lp))
 
-# N=1500 and n=600 takes approx 10-20min to generate a pic (this is what's used in the compendium).
-# If you use lower N, (N < 1000) make sure to use larger dots (s=10 or larger) in scatter(). Change this manually.
-# I.e. for N>1000 I use around s=2 to s=4, for N<1000 I use around s=10 in scatter().
-# One can also choose to use a smaller grid (a_Re,b_Re)x(a_Im,b_Im). 
+    return None
 
-N = 300 #num in linspace ("resolution" in picture) 
-n = 300 #number of terms in pade sequence
 
-a_Re = -4.0 #start value Real axis
-b_Re = 4.0 #end value Real axis
-Re_x = np.linspace(a_Re,b_Re,N)
+def generate_picture(function, max_number_of_lp):
+    assert isinstance(max_number_of_lp, int), "max_number_of_lp must be of type int"
+    assert 17 > max_number_of_lp >= 1, "max_number_of_lp must be 17 > max_number_of_lp >= 1"
 
-a_Im = -4.0 #start value Imaginary axis
-b_Im = 4.0 #end value Imaginary axis
-Im_y = np.linspace(a_Im,b_Im,N)
+    N = 2000  # num in linspace ("resolution" in picture)
+    n = 800  # number of terms in pade sequence
 
-list_of_limit_points = []
-for k in range(N):
-    for i in range(N):
-        z = complex(Re_x[i],Im_y[k])
-        no_of_limit_points = test(f(z,n))
-        list_of_limit_points.append([Re_x[i],Im_y[k],no_of_limit_points])
+    a_Re = -4.0  # start value Real axis
+    b_Re = 4.0  # end value Real axis
+    Re_x = np.linspace(a_Re, b_Re, N)
 
-for i in range(6): #no. of limit points included in picture (max 17) - make sure this number match the one in test()
-    scatter(list_of_limit_points,i)
-plt.xlim(a_Re,b_Re)
-plt.ylim(a_Im,b_Im)
-plt.xlabel('Re')
-plt.ylabel('Im')
-#plt.legend(bbox_to_anchor=(1.0,1.0),handles=[red,yellow,blue,green,magenta,black])
-plt.show()
+    a_Im = -4.0  # start value Imaginary axis
+    b_Im = 4.0  # end value Imaginary axis
+    Im_y = np.linspace(a_Im, b_Im, N)
+
+    list_of_limit_points = []
+    for k in range(N):
+        for i in range(N):
+            z = complex(Re_x[i], Im_y[k])
+            no_of_limit_points = test_limit_points(sequence=continued_function(z=z, n=n, function=function),
+                                                   max_number_of_lp=max_number_of_lp)
+            list_of_limit_points.append([Re_x[i], Im_y[k], no_of_limit_points])
+
+    scatter(function=function,
+            list_lp=list_of_limit_points,
+            max_number_of_lp=max_number_of_lp,
+            a_re=a_Re, b_re=b_Re, a_im=a_Im, b_im=b_Im,
+            legend=False)
