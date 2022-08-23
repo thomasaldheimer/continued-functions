@@ -26,6 +26,11 @@ patches = {1: mpatches.Patch(color=color_codes[1], label='1 lp'),
            16: mpatches.Patch(color=color_codes[16], label='16 lp'),
            0: mpatches.Patch(color=color_codes[0], label='undef')}
 
+#functions = ['exp', 'log', 'sqrt', 'cube_root', 'sine', 'cosine', 'tan', 'arcsine', 'arccosine', 'arctan', 'sineh',
+#             'cosineh', 'tanh', 'arcsineh', 'arccosineh', 'arctanh', 'exp_sin', 'sin_exp', 'log_sin', 'sin_log',
+#             'cos_sin', 'fraction_1', 'fraction_2']
+functions = ['exp_sin', 'sin_exp', 'log_sin', 'sin_log', 'cos_sin', 'fraction_1', 'fraction_2']
+
 
 def continued_function(z, n, function):
     """
@@ -133,7 +138,7 @@ def scatter(function, list_lp, max_number_of_lp, a_re, b_re, a_im, b_im, legend)
     """
     Generate a scatter plot for each number of limit points (each color code).
     """
-    fig = plt.figure(figsize=(16, 16), dpi=2000)
+    fig = plt.figure(figsize=(16, 16), dpi=1200)
     ax = fig.add_subplot(111, facecolor=color_codes[0])
 
     for lp in range(1, max_number_of_lp+1):
@@ -144,7 +149,7 @@ def scatter(function, list_lp, max_number_of_lp, a_re, b_re, a_im, b_im, legend)
             if list_lp[k][2] == lp:
                 x.append(list_lp[k][0])
                 y.append(list_lp[k][1])
-        ax.scatter(x, y, s=2, color=color, marker=',', lw=0, alpha=1)
+        ax.scatter(x, y, s=1, color=color, marker=',', lw=0, alpha=1)
         ax.set_aspect('equal', 'box')
     plt.xlim(a_re, b_re)
     plt.ylim(a_im, b_im)
@@ -165,15 +170,15 @@ def generate_picture(function, max_number_of_lp):
     assert isinstance(max_number_of_lp, int), "max_number_of_lp must be of type int"
     assert 17 > max_number_of_lp >= 1, "max_number_of_lp must be 17 > max_number_of_lp >= 1"
 
-    N = 2000  # num in linspace ("resolution" in picture)
-    n = 800  # number of terms in pade sequence
+    N = 1500  # num in linspace ("resolution" in picture)
+    n = 600  # number of terms in pade sequence
 
-    a_Re = -4.0  # start value Real axis
-    b_Re = 4.0  # end value Real axis
+    a_Re = -5.0  # start value Real axis
+    b_Re = 5.0  # end value Real axis
     Re_x = np.linspace(a_Re, b_Re, N)
 
-    a_Im = -4.0  # start value Imaginary axis
-    b_Im = 4.0  # end value Imaginary axis
+    a_Im = -5.0  # start value Imaginary axis
+    b_Im = 5.0  # end value Imaginary axis
     Im_y = np.linspace(a_Im, b_Im, N)
 
     list_of_limit_points = []
@@ -189,3 +194,8 @@ def generate_picture(function, max_number_of_lp):
             max_number_of_lp=max_number_of_lp,
             a_re=a_Re, b_re=b_Re, a_im=a_Im, b_im=b_Im,
             legend=False)
+
+
+for func in functions:
+    generate_picture(func, 16)
+    print('COMPLETE: {}'.format(func))
